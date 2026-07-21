@@ -34,7 +34,7 @@ const Register = () => {
     if (result.success) {
       navigate('/');
     } else {
-      setError(result.message);
+      setError(result.message || result.error);
     }
   };
 
