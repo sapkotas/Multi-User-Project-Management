@@ -26,6 +26,8 @@ const Dashboard = () => {
     totalTasks: 0,
   });
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   useEffect(() => {
     fetchWorkspaces();
   }, []);
@@ -101,18 +103,24 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-zinc-950 text-white select-none">
-      <Navbar activeWorkspaceName={currentWorkspace?.name} />
+      <Navbar 
+        activeWorkspaceName={currentWorkspace?.name} 
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
       
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
         <Sidebar
           workspaces={workspaces}
           currentWorkspace={currentWorkspace}
           onWorkspaceSelect={setCurrentWorkspace}
           boards={boards}
           onAddBoardClick={() => setShowBoardModal(true)}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
         />
 
-        <main className="flex-1 overflow-y-auto p-8 relative">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-8 relative">
           <div className="max-w-5xl mx-auto flex flex-col gap-8">
             
             {/* Header section */}

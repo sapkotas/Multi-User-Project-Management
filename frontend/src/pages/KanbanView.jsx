@@ -17,6 +17,7 @@ const KanbanView = () => {
   const [board, setBoard] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Modal / Form state
   const [showTaskModal, setShowTaskModal] = useState(false);
@@ -191,36 +192,42 @@ const KanbanView = () => {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden bg-zinc-950 text-white select-none">
-      <Navbar activeWorkspaceName={currentWorkspace?.name} />
+      <Navbar 
+        activeWorkspaceName={currentWorkspace?.name} 
+        isSidebarOpen={isSidebarOpen}
+        onToggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
 
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden relative">
         <Sidebar
           workspaces={workspaces}
           currentWorkspace={currentWorkspace}
           onWorkspaceSelect={handleWorkspaceChange}
           boards={boards}
           onAddBoardClick={() => navigate('/')} // Redirect to dashboard to create board
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
         />
 
-        <main className="flex-1 overflow-hidden flex flex-col p-6 gap-6">
+        <main className="flex-1 overflow-hidden flex flex-col p-4 md:p-6 gap-4 md:gap-6">
           {/* Header */}
-          <div className="flex items-center justify-between shrink-0">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between shrink-0 gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <button
                 onClick={() => navigate('/')}
-                className="p-2 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-zinc-200 transition-all duration-200"
+                className="p-2 hover:bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-400 hover:text-zinc-200 transition-all duration-200 cursor-pointer"
               >
                 <ArrowLeft className="h-4 w-4" />
               </button>
               <div>
-                <h2 className="text-2xl font-bold text-zinc-100">{board?.name || 'Loading Board...'}</h2>
-                <p className="text-xs text-zinc-500 mt-0.5">Workspace: {currentWorkspace?.name}</p>
+                <h2 className="text-xl sm:text-2xl font-bold text-zinc-100 truncate max-w-[200px] xs:max-w-none">{board?.name || 'Loading Board...'}</h2>
+                <p className="text-[10px] sm:text-xs text-zinc-500 mt-0.5">Workspace: {currentWorkspace?.name}</p>
               </div>
             </div>
 
             <button
               onClick={() => setShowTaskModal(true)}
-              className="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-semibold text-white shadow-lg shadow-indigo-600/10 hover:shadow-indigo-500/20 transition-all duration-200"
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-xl text-sm font-semibold text-white shadow-lg shadow-indigo-600/10 hover:shadow-indigo-500/20 transition-all duration-200 cursor-pointer"
             >
               <Plus className="h-4.5 w-4.5" />
               <span>Add Task</span>
@@ -231,11 +238,11 @@ const KanbanView = () => {
           {loading ? (
             <div className="flex-1 flex items-center justify-center text-zinc-500">Loading tasks...</div>
           ) : (
-            <div className="flex-grow overflow-x-auto flex gap-6 pb-4">
+            <div className="flex-grow overflow-x-auto flex gap-4 md:gap-6 pb-4 w-full select-none cursor-grab active:cursor-grabbing scrollbar-thin touch-pan-x">
               {columns.map((column) => {
                 const columnTasks = tasks.filter((t) => t.status === column);
                 return (
-                  <div key={column} className="w-80 bg-zinc-950 border border-zinc-900/80 rounded-2xl flex flex-col max-h-full overflow-hidden shrink-0">
+                  <div key={column} className="w-[85vw] sm:w-80 bg-zinc-950 border border-zinc-900/80 rounded-2xl flex flex-col max-h-full overflow-hidden shrink-0">
                     {/* Column Header */}
                     <div className="flex items-center justify-between p-4 border-b border-zinc-900 bg-zinc-900/30">
                       <h4 className="font-bold text-zinc-300 text-sm">{column}</h4>
