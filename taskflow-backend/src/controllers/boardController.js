@@ -118,6 +118,6 @@ export const deleteBoard = async (req, res) => {
 
     res.status(200).json({ status: 'success', message: 'Board deleted successfully' });
   } catch (error) {
-    res.status(500).json({ status: 'error', message: error.message });
+    // res.status(500).json({ status: 'error', message: error.message });
   }
 };
