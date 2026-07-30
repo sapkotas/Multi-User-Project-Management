@@ -1,5 +1,16 @@
 # Node dependencies
 **/node_modules/
+**/taskflow-backend/node_modules/
+**/frontend/node_modules/
+**/taskflow-backend/package.json/
+**/taskflow-backend/package-lock.json/
+**/frontend/package.json/
+**/frontend/package-lock.json/
+**/taskflow-backend/vercel.json/
+
+
+
+
 
 # Environment files (secrets)
 **/.env
