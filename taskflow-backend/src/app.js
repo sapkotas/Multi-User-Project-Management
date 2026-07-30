@@ -5,6 +5,7 @@ import workspaceRoutes from './routes/workspaceRoutes.js';
 import boardRoutes from './routes/boardRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import { errorHandler } from './middleware/errorMiddleware.js';
+import { connectDB } from './config/db.js';
 
 const app = express();
 
@@ -28,4 +29,12 @@ app.get('/', (req, res) => {
 
 app.use(errorHandler);
 
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Database connection failed' });
+  }
+});
 export default app;
