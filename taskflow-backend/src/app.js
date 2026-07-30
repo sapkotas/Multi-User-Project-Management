@@ -17,6 +17,16 @@ app.use(cors({
 
 app.use(express.json());
 
+// Ensure DB is connected before any route runs
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    res.status(500).json({ status: 'error', message: 'Database connection failed' });
+  }
+});
+
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/workspaces', workspaceRoutes);
@@ -27,14 +37,7 @@ app.get('/', (req, res) => {
   res.status(200).json({ status: 'success', message: 'TaskFlow API is running!' });
 });
 
+// Error handler must be last
 app.use(errorHandler);
 
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (err) {
-    res.status(500).json({ status: 'error', message: 'Database connection failed' });
-  }
-});
 export default app;
