@@ -8,7 +8,12 @@ import { errorHandler } from './middleware/errorMiddleware.js';
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(express.json());
 
 // Routes
@@ -21,8 +26,6 @@ app.get('/', (req, res) => {
   res.status(200).json({ status: 'success', message: 'TaskFlow API is running!' });
 });
 
-// Error handling middleware
 app.use(errorHandler);
 
 export default app;
-
